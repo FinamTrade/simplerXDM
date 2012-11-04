@@ -38,7 +38,7 @@ To set up a simple XDM this is what you will need to add to the *consumer*
     });
 ```
 These properties can be set only on the consumer:
-* `params` {Object} - set additional parameters to provider url like 'parameters: {myQuery: "value"}'
+* `params` {Object} - set additional parameters to provider url like 'params: {myQuery: "value"}'
 * `container` {String || DOMElement} - Set this to an id or element if you want the iframe to be visible for interaction.
 * `props` {Object} - The key/value pairs of this object will be deep-copied onto the iframe. As an example, use `props: {style: {border: "1px solid red"} }` to set the border of the iframe to 1px solid red.
 * `onReady` - If you set this to a function, then this will be called once the communication has been established.
