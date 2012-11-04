@@ -394,7 +394,7 @@
             var parameters = apply({
                     xdm_e:getLocation(location.href),
                     xdm_c:channel
-                }, config.parameters || {}),
+                }, config.params || {}),
 
                 props = apply({
                     src:appendQueryParameters(url, parameters),
