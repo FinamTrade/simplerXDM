@@ -258,33 +258,34 @@
         function createRemoteMethod(method) {
             var slice = Array.prototype.slice;
             return function () {
-                var length = arguments.length,
+                var args = arguments,
+                    length = args.length,
                     callback,
                     message = {
                         method:method
                     };
 
-                if (length > 0 && isFunction(arguments[length - 1])) {
+                if (length > 0 && isFunction(args[length - 1])) {
                     //with callback, procedure
-                    if (length > 1 && isFunction(arguments[length - 2])) {
+                    if (length > 1 && isFunction(args[length - 2])) {
                         // two callbacks, success and error
                         callback = {
-                            success:arguments[length - 2],
-                            error:arguments[length - 1]
+                            success:args[length - 2],
+                            error:args[length - 1]
                         };
-                        message.params = slice.call(arguments, 0, length - 2);
+                        message.params = slice.call(args, 0, length - 2);
                     } else {
                         // single callback, success
                         callback = {
-                            success:arguments[length - 1]
+                            success:args[length - 1]
                         };
-                        message.params = slice.call(arguments, 0, length - 1);
+                        message.params = slice.call(args, 0, length - 1);
                     }
                     callbacks['' + (++callbackCounter)] = callback;
                     message.id = callbackCounter;
                 } else {
                     // no callbacks, a notification
-                    message.params = slice.call(arguments, 0);
+                    message.params = slice.call(args, 0);
                 }
                 // Send the method request
                 outgoing(message);
