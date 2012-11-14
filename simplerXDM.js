@@ -383,7 +383,7 @@
         if (config.url) {
             var url = config.url,
                 frame;
-            channel = config.channel || ("default_" + Math.floor(Math.random() * 10000)); // randomize the initial id in case of multiple closures loaded
+            channel = config.channel || ("default_" + Math.floor(Math.random() * 1000000)); // randomize the initial id in case of multiple closures loaded
             targetOrigin = getLocation(url);
 
             // add the event handler for listening
