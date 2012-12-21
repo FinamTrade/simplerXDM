@@ -27,10 +27,17 @@
     }
 
     //https://developer.mozilla.org/ru/docs/JavaScript/Reference/Global_Objects/Array/isArray
-    if (!Array.isArray) {
-        var ObjectToString = Object.prototype.toString;
-        Array.isArray = function (o) {
-            return ObjectToString.call(o) == "[object Array]";
+    var isArray = Array.isArray;
+    if (!isArray) {
+        isArray = function (o) {
+            return Object.prototype.toString.call(o) == "[object Array]";
+        };
+    }
+
+    var arrayFrom = Array.from;
+    if (!arrayFrom) {
+        arrayFrom = function (o) {
+            return Array.prototype.slice.call(o);
         };
     }
 
@@ -256,9 +263,8 @@
         }
 
         function createRemoteMethod(method) {
-            var slice = Array.prototype.slice;
             return function () {
-                var args = arguments,
+                var args = arrayFrom(arguments),
                     length = args.length,
                     callback,
                     message = {
@@ -273,19 +279,19 @@
                             success:args[length - 2],
                             error:args[length - 1]
                         };
-                        message.params = slice.call(args, 0, length - 2);
+                        message.params = args.slice(0, length - 2);
                     } else {
                         // single callback, success
                         callback = {
                             success:args[length - 1]
                         };
-                        message.params = slice.call(args, 0, length - 1);
+                        message.params = args.slice(0, length - 1);
                     }
                     callbacks['' + (++callbackCounter)] = callback;
                     message.id = callbackCounter;
                 } else {
                     // no callbacks, a notification
-                    message.params = slice.call(args, 0);
+                    message.params = args;
                 }
                 // Send the method request
                 outgoing(message);
