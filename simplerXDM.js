@@ -2,160 +2,160 @@
 
     var document = window.document,
         location = window.location,
-        ft = window.finamtrade;
+        ft = window.finamtrade
 
     if (!ft) {
-        window.finamtrade = ft = {};
+        window.finamtrade = ft = {}
     }
     if (!!ft.XDM) {
-        return;
+        return
     }
 
     function isFunction(f) {
-        return typeof f == "function";
+        return typeof f == "function"
     }
 
     function isString(s) {
-        return typeof s == "string";
+        return typeof s == "string"
     }
 
-    function isObject(obj) {
-        return obj != null && typeof obj == "object";
-    }
+//    function isObject(obj) {
+//        return obj != null && typeof obj == "object"
+//    }
 
     function noop() {
     }
 
     //https://developer.mozilla.org/ru/docs/JavaScript/Reference/Global_Objects/Array/isArray
-    var isArray = Array.isArray;
+    var isArray = Array.isArray
     if (!isArray) {
         isArray = function (o) {
-            return Object.prototype.toString.call(o) == "[object Array]";
-        };
+            return Object.prototype.toString.call(o) == "[object Array]"
+        }
     }
 
-    var arrayFrom = Array.from;
+    var arrayFrom = Array.from
     if (!arrayFrom) {
         arrayFrom = function (o) {
-            return Array.prototype.slice.call(o);
-        };
+            return Array.prototype.slice.call(o)
+        }
     }
 
     function postMessage(target, data, origin) {
         if (window.addEventListener) {
-            target.postMessage(data, origin);
+            target.postMessage(data, origin)
         } else {
             //postMessage is synchronous in IE 8, so we wrap it in setTimeout
             setTimeout(function () {
-                target.postMessage(data, origin);
-            }, 0);
+                target.postMessage(data, origin)
+            }, 0)
         }
     }
 
     function addEventListener(target, event, handler) {
         if (target.addEventListener) {
-            target.addEventListener(event, handler, false);
+            target.addEventListener(event, handler, false)
         } else {
-            target.attachEvent("on" + event, handler);
+            target.attachEvent("on" + event, handler)
         }
     }
 
     function removeEventListener(target, event, handler) {
         if (target.removeEventListener) {
-            target.removeEventListener(event, handler, false);
+            target.removeEventListener(event, handler, false)
         } else {
-            target.detachEvent("on" + event, handler);
+            target.detachEvent("on" + event, handler)
         }
     }
 
     function getLocation(url) {
         if (/^file:/.test(url)) {
-            throw "The file:// protocol is not supported";
+            throw "The file:// protocol is not supported"
         }
         var reURI = /^((http.?:)\/\/([^:\/\s]+)(:\d+)*)/, // returns groups for protocol (2), domain (3) and port (4)
             m = url.toLowerCase().match(reURI),
-            proto = m[2], domain = m[3], port = m[4] || "";
+            proto = m[2], domain = m[3], port = m[4] || ""
         if ((proto == "http:" && port == ":80") || (proto == "https:" && port == ":443")) {
-            port = "";
+            port = ""
         }
-        return proto + "//" + domain + port;
+        return proto + "//" + domain + port
     }
 
     function getOrigin(event) {
         if (event.origin) {
             // This is the HTML5 property
-            return getLocation(event.origin);
+            return getLocation(event.origin)
         }
         if (event.uri) {
             // From earlier implementations
-            return getLocation(event.uri);
+            return getLocation(event.uri)
         }
         if (event.domain) {
             // This is the last option and will fail if the
             // origin is not using the same schema as we are
-            return location.protocol + "//" + event.domain;
+            return location.protocol + "//" + event.domain
         }
-        throw "Unable to retrieve the origin of the event";
+        throw "Unable to retrieve the origin of the event"
     }
 
     function getQuery() {
         var data = {},
             pair,
             input = location.search.substring(1).split("&"),
-            i = input.length;
+            i = input.length
         while (i--) {
-            pair = input[i].split("=");
-            data[pair[0]] = decodeURIComponent(pair[1]);
+            pair = input[i].split("=")
+            data[pair[0]] = decodeURIComponent(pair[1])
         }
-        return data;
+        return data
     }
 
     function appendQueryParameters(url, parameters) {
         var hash = "",
-            hashIndex = url.indexOf("#");
+            hashIndex = url.indexOf("#")
         if (hashIndex != -1) {
-            hash = url.substring(hashIndex);
-            url = url.substring(0, hashIndex);
+            hash = url.substring(hashIndex)
+            url = url.substring(0, hashIndex)
         }
-        var q = [];
+        var q = []
         for (var key in parameters) {
             if (parameters.hasOwnProperty(key)) {
-                q.push(key + "=" + encodeURIComponent(parameters[key]));
+                q.push(key + "=" + encodeURIComponent(parameters[key]))
             }
         }
-        return url + (url.indexOf("?") == -1 ? "?" : "&") + q.join("&") + hash;
+        return url + (url.indexOf("?") == -1 ? "?" : "&") + q.join("&") + hash
     }
 
     function attr(elem, attrs) {
         for (var prop in attrs) {
             if (attrs.hasOwnProperty(prop)) {
-                elem.setAttribute(prop, attrs[prop]);
+                elem.setAttribute(prop, attrs[prop])
             }
         }
     }
 
     function apply(destination, source) {
-//        var prop, member;
+//        var prop, member
         for (var prop in source) {
             if (source.hasOwnProperty(prop)) {
-                destination[prop] = source[prop];
+                destination[prop] = source[prop]
 //                if (prop in destination) {
-//                    member = source[prop];
+//                    member = source[prop]
 //                    if (isObject(member)) {
-//                        apply(destination[prop], member);
+//                        apply(destination[prop], member)
 //                    } else {
-//                        destination[prop] = source[prop];
+//                        destination[prop] = source[prop]
 //                    }
 //                } else {
-//                    destination[prop] = source[prop];
+//                    destination[prop] = source[prop]
 //                }
             }
         }
-        return destination;
+        return destination
     }
 
     function createFrame(container, props) {
-        var frame = document.createElement("IFRAME");
+        var frame = document.createElement("IFRAME")
 
         if (!container) {
             // This needs to be hidden like this, simply setting display:none and the like will cause failures in some browsers.
@@ -164,10 +164,10 @@
                 top: "-9999px",
                 // Avoid potential horizontal scrollbar
                 left: "0"
-            });
-            container = document.body;
+            })
+            container = document.body
         } else if (isString(container)) {
-            container = document.getElementById(container);
+            container = document.getElementById(container)
         }
 
         // HACK: IE cannot have the src attribute set when the frame is appended
@@ -176,90 +176,90 @@
         //       instead default to "about:blank", which causes SSL mixed-content
         //       warnings in IE6 when on an SSL parent page.
         var src = props.src,
-            style = props.style;
+            style = props.style
 
-        props.src = "javascript:false";
+        props.src = "javascript:false"
 
         if (style) {
-            delete props.style;
-            apply(frame.style, style);
+            delete props.style
+            apply(frame.style, style)
         }
 
-        frame.frameBorder = 0;  //HTML4 only. https://developer.mozilla.org/en-US/docs/HTML/Element/iframe
-//        frame.border = 0;
-        attr(frame, props);
+        frame.frameBorder = 0  //HTML4 only. https://developer.mozilla.org/en-US/docs/HTML/Element/iframe
+//        frame.border = 0
+        attr(frame, props)
 
-        container.appendChild(frame);
-        frame.src = src;
+        container.appendChild(frame)
+        frame.src = src
 
-        return frame;
+        return frame
     }
 
     function resolveUrl(url) {
         var reParent = /[\-\w]+\/\.\.\//, // matches a foo/../ expression
-            reDoubleSlash = /([^:])\/\//g; // matches // anywhere but in the protocol
+            reDoubleSlash = /([^:])\/\//g // matches // anywhere but in the protocol
 
         // replace all // except the one in proto with /
-        url = url.replace(reDoubleSlash, "$1/");
+        url = url.replace(reDoubleSlash, "$1/")
 
         // If the url is a valid url we do nothing
         if (!url.match(/^(http||https):\/\//)) {
             // If this is a relative path
-            var path = (url.substring(0, 1) === "/") ? "" : location.pathname;
+            var path = (url.substring(0, 1) === "/") ? "" : location.pathname
             if (path.substring(path.length - 1) !== "/") {
-                path = path.substring(0, path.lastIndexOf("/") + 1);
+                path = path.substring(0, path.lastIndexOf("/") + 1)
             }
 
-            url = location.protocol + "//" + location.host + path + url;
+            url = location.protocol + "//" + location.host + path + url
         }
 
         // reduce all 'xyz/../' to just ''
         while (reParent.test(url)) {
-            url = url.replace(reParent, "");
+            url = url.replace(reParent, "")
         }
 
-        return url;
+        return url
     }
 
     ft.XDM = function (config) {
         function onMessage(event) {
-            var origin = getOrigin(event);
+            var origin = getOrigin(event)
             if (origin == targetOrigin && event.data.substring(0, channel.length + 1) == channel + " ") {
-                incoming(event.data.substring(channel.length + 1));
+                incoming(event.data.substring(channel.length + 1))
             }
         }
 
         function waitForReady(event) {
             if (event.data == channel + "-ready") {
                 // replace the eventlistener
-                callerWindow = ("postMessage" in frame.contentWindow) ? frame.contentWindow : frame.contentWindow.document;
-                removeEventListener(window, "message", waitForReady);
-                addEventListener(window, "message", onMessage);
+                callerWindow = ("postMessage" in frame.contentWindow) ? frame.contentWindow : frame.contentWindow.document
+                removeEventListener(window, "message", waitForReady)
+                addEventListener(window, "message", onMessage)
                 if (isFunction(config.onReady)) {
-                    config.onReady();
+                    config.onReady()
                 }
             }
         }
 
         function incoming(message) {
-            var data = JSON.parse(message);
+            var data = JSON.parse(message)
             if (data.method) {
                 // A method call from the remote end
-                executeLocalMethod(data.id, localMethods[data.method], data.params);
+                executeLocalMethod(data.id, localMethods[data.method], data.params)
             } else {
                 // A method response from the other end
-                var callback = callbacks[data.id];
+                var callback = callbacks[data.id]
                 if (data.error) {
-                    callback.error && callback.error(data.error);
+                    callback.error && callback.error(data.error)
                 } else if (callback.success) {
-                    callback.success(data.result);
+                    callback.success(data.result)
                 }
-                delete callbacks[data.id];
+                delete callbacks[data.id]
             }
         }
 
         function outgoing(data) {
-            postMessage(callerWindow, channel + " " + JSON.stringify(data), targetOrigin);
+            postMessage(callerWindow, channel + " " + JSON.stringify(data), targetOrigin)
         }
 
         function createRemoteMethod(method) {
@@ -269,7 +269,7 @@
                     callback,
                     message = {
                         method:method
-                    };
+                    }
 
                 if (length > 0 && isFunction(args[length - 1])) {
                     //with callback, procedure
@@ -278,24 +278,24 @@
                         callback = {
                             success:args[length - 2],
                             error:args[length - 1]
-                        };
-                        message.params = args.slice(0, length - 2);
+                        }
+                        message.params = args.slice(0, length - 2)
                     } else {
                         // single callback, success
                         callback = {
                             success:args[length - 1]
-                        };
-                        message.params = args.slice(0, length - 1);
+                        }
+                        message.params = args.slice(0, length - 1)
                     }
-                    callbacks['' + (++callbackCounter)] = callback;
-                    message.id = callbackCounter;
+                    callbacks['' + (++callbackCounter)] = callback
+                    message.id = callbackCounter
                 } else {
                     // no callbacks, a notification
-                    message.params = args;
+                    message.params = args
                 }
                 // Send the method request
-                outgoing(message);
-            };
+                outgoing(message)
+            }
         }
 
         function executeLocalMethod(id, fn, params) {
@@ -307,72 +307,72 @@
                             code:-32601,
                             message:"Procedure not found."
                         }
-                    });
+                    })
                 }
-                return;
+                return
             }
 
             var success,
-                error;
+                error
             if (id) {
                 success = function (result) {
-                    success = noop;
+                    success = noop
                     outgoing({
                         id:id,
                         result:result
-                    });
-                };
+                    })
+                }
                 error = function (message, data) {
-                    error = noop;
+                    error = noop
                     var msg = {
                         id:id,
                         error:{
                             code:-32099,
                             message:message
                         }
-                    };
-                    if (data) {
-                        msg.error.data = data;
                     }
-                    outgoing(msg);
-                };
+                    if (data) {
+                        msg.error.data = data
+                    }
+                    outgoing(msg)
+                }
             } else {
-                success = error = noop;
+                success = error = noop
             }
             // Call local method
             if (!isArray(params)) {
-                params = [params];
+                params = [params]
             }
             try {
-                var result = fn.apply(self, params.concat([success, error]));
+                var result = fn.apply(self, params.concat([success, error]))
                 if (result !== undefined) {
-                    success(result);
+                    success(result)
                 }
             } catch (e) {
-                error(e.message);
+                error(e.message)
             }
         }
 
         function extendRpcMethods(remote, local) {
-            apply(localMethods, local);
-            apply(remoteMethods, remote);
+            apply(localMethods, local)
+            apply(remoteMethods, remote)
             for (var name in remote) {
                 if (remote.hasOwnProperty(name)) {
-                    self[name] = createRemoteMethod(name);
+                    self[name] = createRemoteMethod(name)
                 }
             }
         }
 
         function destroy() {
             for (var i = 0; i < remoteMethods.length; i++) {
-                var method = remoteMethods[i];
-                delete self[method];
+                var method = remoteMethods[i]
+                delete self[method]
             }
-            removeEventListener(window, "message", waitForReady);
-            removeEventListener(window, "message", onMessage);
+            removeEventListener(window, "message", waitForReady)
+            removeEventListener(window, "message", onMessage)
             if (frame) {
-                frame.parentNode.removeChild(frame);
-                self.frame = frame = null;
+                frame.parentNode.removeChild(frame)
+                self.frame = frame = null
             }
         }
 
@@ -383,20 +383,20 @@
             channel,
             targetOrigin,   // the domain to communicate with
             localMethods = {},
-            remoteMethods = {};
+            remoteMethods = {}
 
-        extendRpcMethods(config.remote, config.local);
+        extendRpcMethods(config.remote, config.local)
         if (config.url) {
             var url = config.url,
-                frame;
-            channel = config.channel || ("default_" + Math.floor(Math.random() * 1000000)); // randomize the initial id in case of multiple closures loaded
-            targetOrigin = getLocation(url);
+                frame
+            channel = config.channel || ("default_" + Math.floor(Math.random() * 1000000)) // randomize the initial id in case of multiple closures loaded
+            targetOrigin = getLocation(url)
 
             // add the event handler for listening
-            addEventListener(window, "message", waitForReady);
+            addEventListener(window, "message", waitForReady)
 
             // set up the iframe
-            url = resolveUrl(url);
+            url = resolveUrl(url)
 
             var parameters = apply({
                     xdm_e:getLocation(location.href),
@@ -406,24 +406,24 @@
                 props = apply({
                     src:appendQueryParameters(url, parameters),
                     id:"ft_xdm_provider_" + channel
-                }, config.props || {});
+                }, config.props || {})
 
-            self.frame = frame = createFrame(config.container, props);
-            self.extendRpcMethods = extendRpcMethods;
-            self.destroy = destroy;
+            self.frame = frame = createFrame(config.container, props)
+            self.extendRpcMethods = extendRpcMethods
+            self.destroy = destroy
         } else {
             var parent = window.parent,
                 query = getQuery(),
-                remoteUrl = query.xdm_e.replace(/["'<>\\]/g, "");
-            channel = query.xdm_c.replace(/["'<>\\]/g, ""); // anti-XSS protection
-            targetOrigin = getLocation(remoteUrl);
-            callerWindow = ("postMessage" in parent) ? parent : parent.document; // the window that we will call with, parent.document used in opera
+                remoteUrl = query.xdm_e.replace(/["'<>\\]/g, "")
+            channel = query.xdm_c.replace(/["'<>\\]/g, "") // anti-XSS protection
+            targetOrigin = getLocation(remoteUrl)
+            callerWindow = ("postMessage" in parent) ? parent : parent.document // the window that we will call with, parent.document used in opera
 
-            addEventListener(window, "message", onMessage);
-            postMessage(callerWindow, channel + "-ready", targetOrigin);
+            addEventListener(window, "message", onMessage)
+            postMessage(callerWindow, channel + "-ready", targetOrigin)
         }
 
-        return self;
-    };
+        return self
+    }
 
-})(window);
+})(window)
