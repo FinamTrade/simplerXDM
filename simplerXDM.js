@@ -340,7 +340,7 @@
                 success = error = noop;
             }
             // Call local method
-            if (!Array.isArray(params)) {
+            if (!isArray(params)) {
                 params = [params];
             }
             try {
