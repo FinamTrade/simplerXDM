@@ -93,13 +93,7 @@ Provider can be teared down (iframe removed etc) using
     rpc.destroy();
 ```
 
-License
-=======
-simplerXDM is distributed under the MIT license. Please keep the exisisting headers.
-
 Attribution
-======
-Main developer:
- - <nordlig.ulv@gmail.com>, Andrey Korzhevskiy
+===
 
 Thanks to [Øyvind Sean Kinsey](http://easyxdm.net/) - creator of easyXDM
