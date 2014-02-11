@@ -187,6 +187,7 @@
 
         frame.frameBorder = 0  //HTML4 only. https://developer.mozilla.org/en-US/docs/HTML/Element/iframe
 //        frame.border = 0
+        frame.allowTransparency = true
         attr(frame, props)
 
         container.appendChild(frame)
